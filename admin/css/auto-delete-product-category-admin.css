@@ -8,19 +8,15 @@
  * included in this file.
  */
 
-#adminmenu .toplevel_page_auto-delete-images .wp-menu-image::before {
-	content: "";
-	display: block;
-	width: 20px;
-	height: 20px;
-	background: url('../assets/timer-clock-svgrepo-com.svg') no-repeat center center;
-	background-size: contain;
+#toplevel_page_auto-delete-product-category
+a
+.dashicons-admin-generic{
 	margin: auto;
 }
 
-.dashicons-admin-generic {
-	display: flex;
-	align-items: center;
+#toplevel_page_auto-delete-product-category
+.dashicons-admin-generic:before {
+    margin: auto
 }
 
 .flex-column {
@@ -124,6 +120,11 @@
     max-width: 60rem;
 }
 
+.max-site-width {
+    max-width: 140rem;
+    width: 100%;
+}
+
 .bg-dark-grey-2 {
     background-color: var(--dark-grey-2);
 }
@@ -150,11 +151,6 @@
     grid-template-columns: 1fr 1fr;
 }
 
-.columns-3 {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-}
-
 .gap-l {
     gap: 2rem;
     gap: var(--space-l);
@@ -163,6 +159,10 @@
 .margin-bottom-2xs {
     margin-bottom: 0.82rem;
     margin-bottom: var(--space-2xs);
+}
+
+.span-2 {
+    grid-column: span 2;
 }
 
 :root {
@@ -1530,11 +1530,6 @@
 
 .width-10 {
     width: 10%;
-}
-
-.max-site-width {
-    max-width: 140rem;
-    width: 100%;
 }
 
 .max-width-140 {

@@ -24,11 +24,9 @@ function render_product_category_select()
 
     $categories = get_terms($args);
     $selected   = get_option('_adpc_wc_cat', '');
-
     if (empty($categories) || is_wp_error($categories)) {
         return;
     }
-
     echo '<select class="full-width" name="_adpc_wc_cat">';
     echo '<option value="">Seleccionar categoría</option>';
     render_category_options($categories, 0, 0, $selected);
@@ -41,20 +39,18 @@ function render_category_options($categories, $parent = 0, $depth = 0, $selected
         if ($category->parent != $parent) {
             continue;
         }
-
         $indent = str_repeat('&nbsp;&nbsp;&nbsp;', $depth);
         $is_selected = selected($selected, $category->term_id, false);
-
         echo '<option value="' . esc_attr($category->term_id) . '" ' . $is_selected . '>' . $indent . esc_html($category->name) . '</option>';
-
-        // Subcategorías
         render_category_options($categories, $category->term_id, $depth + 1, $selected);
     }
 }
 
-$period       = get_option('_adpc_period', '');
-$period_type  = get_option('_days_or_months', '');
-$category_id  = get_option('_adpc_wc_cat', '');
+$period             = get_option('_adpc_period', '');
+$period_type        = get_option('_hours_days_months', '');
+$category_id        = get_option('_adpc_wc_cat', '');
+$batch_size         = get_option('_batch_size', '');
+$cron_period        = get_option('_cron_period', '');   
 
 ?>
 
@@ -79,14 +75,15 @@ if (!defined('DISABLE_WP_CRON') || DISABLE_WP_CRON === false) { ?>
 
     <hr class="margin-vertical-m">
     <?php if (class_exists('WooCommerce')) { ?>
-        <form id="_hide_rest_api_form" method="post" action="options.php" class="columns-3 max-width-60 gap-s">
+        <form id="_hide_rest_api_form" method="post" action="options.php" class="columns-2 max-width-60 gap-s">
             <div class="flex-column gap-4xs">
                 <label for="_adpc_period">Perído</label>
-                <input type="number" name="_adpc_period" id="_adpc_period" placeholder="Ingrese el período en días, meses u horas" value="<?php echo esc_attr($period); ?>">
+                <input style="max-width: 25rem;" step=".01" type="number" name="_adpc_period" id="_adpc_period" placeholder="Ingrese el período en días, meses u horas" value="<?php echo esc_attr($period); ?>">
             </div>
             <div class="flex-column gap-4xs">
                 <label for="_days_or_months">Selecciona el tipo de período</label>
                 <select name="_hours_days_months" id="_hours_days_months" class="full-width">
+                    <option value="">Seleccionar un período</option>
                     <option value="_adpc_hours" <?php selected($period_type, '_adpc_hours'); ?>>Horas</option>
                     <option value="_adpc_days" <?php selected($period_type, '_adpc_days'); ?>>Días</option>
                     <option value="_adpc_months" <?php selected($period_type, '_adpc_months'); ?>>Meses</option>
@@ -95,6 +92,23 @@ if (!defined('DISABLE_WP_CRON') || DISABLE_WP_CRON === false) { ?>
             <div class="flex-column gap-4xs">
                 <label for="_adpc_wc_cat">Selecciona la categoría del producto</label>
                 <?php render_product_category_select(); ?>
+            </div>
+            <div class="flex-column gap-4xs">
+                <label for="_cron_period">Ejecución del cron (valores por defecto de WordPress)</label>
+                <select name="_cron_period" id="_cron_period" class="full-width">
+                    <option>Seleccionar ejecución del cron</option>
+                    <option value="_cron_hourly" <?php selected($cron_period, '_cron_hourly'); ?>>Por hora</option>
+                    <option value="_cron_twicedaily" <?php selected($cron_period, '_cron_twicedaily'); ?>>Dos veces al día</option>
+                    <option value="_cron_daily" <?php selected($cron_period, '_cron_daily'); ?>>Por día</option>
+                </select>
+            </div>
+            <hr class="span-2 full-width">
+            <div class="flex-column gap-4xs span-2">
+                <label for="_batch_size">Baches</label>
+                <input style="max-width: 25rem;" type="number" name="_batch_size" id="_batch_size" placeholder="Ingrese un valor para los baches" step="1" value="<?php echo esc_attr($batch_size); ?>">
+                <div class="notice notice-warning margin-left-zero margin-top-s">
+                    <p>El plugin recorrerá todos los productos, les quitará la categoría elegida y lo hará en baches para evitar sobrecargar el servidor. Coloca un valor que se ajuste a tus recursos.</p>
+                </div>
             </div>
             <?php
             settings_fields('adpc_options_group');

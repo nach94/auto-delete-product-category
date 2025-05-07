@@ -62,7 +62,7 @@ class Auto_Delete_Product_Category_Admin {
 			'auto-delete-product-category',
 			array( $this, 'display_plugin_admin_page' ),
 			'dashicons-admin-generic',
-			82
+			81
 		);
 	}
 
@@ -81,6 +81,16 @@ class Auto_Delete_Product_Category_Admin {
 		register_setting(
 			'adpc_options_group',
 			'_hours_days_months'
+		);
+
+		register_setting(
+			'adpc_options_group',
+			'_cron_period'
+		);
+
+		register_setting(
+			'adpc_options_group',
+			'_batch_size'
 		);
 
 	}
